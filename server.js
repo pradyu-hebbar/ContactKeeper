@@ -1,6 +1,13 @@
 const express = require("express");
+const connectDB = require("./config/db");
 const app = express();
-app.use(express.json());
+const path = require("path");
+
+// Init Middleware
+app.use(express.json({ extendend: false }));
+
+// Connect Database
+connectDB();
 
 app.get("/", (req, res) => {
   res.send({ msg: "Welcome To Contact Keeper" });
@@ -10,6 +17,16 @@ app.get("/", (req, res) => {
 app.use("/api/users", require("./routes/users"));
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/contacts", require("./routes/contacts"));
+
+// Serve Static assets in production
+if (process.env.NODE_ENV === "production") {
+  // Set static folder
+  app.use(express.static("client/build"));
+
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
+  );
+}
 
 const PORT = process.env.PORT ?? 5000;
 
