@@ -9,10 +9,6 @@ app.use(express.json({ extendend: false }));
 // Connect Database
 connectDB();
 
-app.get("/", (req, res) => {
-  res.send({ msg: "Welcome To Contact Keeper" });
-});
-
 // Define Routes
 app.use("/api/users", require("./routes/users"));
 app.use("/api/auth", require("./routes/auth"));
